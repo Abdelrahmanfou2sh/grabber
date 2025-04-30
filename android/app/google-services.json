@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "496287253978",
+    "project_id": "elhawy-4d780",
+    "storage_bucket": "elhawy-4d780.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:496287253978:android:61df62abaa4b41fcfcace3",
+        "android_client_info": {
+          "package_name": "com.example.elhawy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDNt7UrC1CS1El--DP0D1KfNOORCcYsGQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:496287253978:android:df3ea2e5188cb7f7fcace3",
+        "android_client_info": {
+          "package_name": "com.example.grabber"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDNt7UrC1CS1El--DP0D1KfNOORCcYsGQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
