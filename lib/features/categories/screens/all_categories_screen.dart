@@ -24,7 +24,7 @@ class AllCategoriesScreen extends StatelessWidget {
                 final category = categories[index];
                 return ListTile(
                   leading: Image.network(
-                    category.imageUrl,
+                    category.url,
                     width: 50,
                     height: 50,
                     fit: BoxFit.cover,

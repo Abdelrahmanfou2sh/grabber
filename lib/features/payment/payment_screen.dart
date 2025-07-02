@@ -319,10 +319,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed:
-                    _isProcessing
-                        ? null
-                        : () async {
+                onPressed: _isProcessing ? null : () async {
                           if (!await _checkInternetConnection()) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -394,10 +391,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
                   elevation: 2,
                 ),
-                child:
-                    _isProcessing
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text('Pay Now'),
+                child: _isProcessing
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text('Pay Now'),
               ),
             ),
           ],

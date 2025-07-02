@@ -3,7 +3,7 @@ import '../model/product_model.dart';
 import '../repo/product_repository.dart';
 part 'products_state.dart';
 
-enum SortOption { priceAsc, priceDesc, nameAsc, nameDesc }
+enum SortOption { priceAsc, priceDesc, titleAsc, titleDesc }
 
 class ProductsCubit extends Cubit<ProductsState> {
   final ProductRepository _productRepository;
@@ -59,7 +59,7 @@ class ProductsCubit extends Cubit<ProductsState> {
           filteredProducts.where((p) => p.price <= _maxPrice!).toList();
     }
 
-    if (_selectedCategory != null && _selectedCategory!.isNotEmpty) {
+    if (_selectedCategory?.isNotEmpty ?? false) {
       filteredProducts =
           filteredProducts
               .where((p) => p.category == _selectedCategory)
@@ -74,11 +74,11 @@ class ProductsCubit extends Cubit<ProductsState> {
         case SortOption.priceDesc:
           filteredProducts.sort((a, b) => b.price.compareTo(a.price));
           break;
-        case SortOption.nameAsc:
-          filteredProducts.sort((a, b) => a.name.compareTo(b.name));
+        case SortOption.titleAsc:
+          filteredProducts.sort((a, b) => a.title.compareTo(b.title));
           break;
-        case SortOption.nameDesc:
-          filteredProducts.sort((a, b) => b.name.compareTo(a.name));
+        case SortOption.titleDesc:
+          filteredProducts.sort((a, b) => b.title.compareTo(a.title));
           break;
         default:
           break;

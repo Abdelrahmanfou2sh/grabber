@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class OrderModel {
   final String id;
   final List<Map<String, dynamic>> products;
@@ -22,7 +20,7 @@ class OrderModel {
       'totalPrice': totalPrice,
       'paymentMethod': paymentMethod,
       'deliveryOption': deliveryOption,
-      'createdAt': Timestamp.fromDate(createdAt),
+      'createdAt': createdAt.toIso8601String(),
     };
   }
 }

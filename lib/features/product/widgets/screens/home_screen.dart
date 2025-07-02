@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../../../core/di/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -110,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     DropdownButtonFormField<SortOption>(
                       decoration: const InputDecoration(labelText: 'Sort By'),
                       value: selectedSort,
-                      items: const [
+                      items: [
                         DropdownMenuItem(
                           value: SortOption.priceAsc,
                           child: Text('Price: Low to High'),
@@ -120,11 +120,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Text('Price: High to Low'),
                         ),
                         DropdownMenuItem(
-                          value: SortOption.nameAsc,
+                          value: SortOption.titleAsc,
                           child: Text('Name: A to Z'),
                         ),
                         DropdownMenuItem(
-                          value: SortOption.nameDesc,
+                          value: SortOption.titleDesc,
                           child: Text('Name: Z to A'),
                         ),
                       ],
@@ -184,15 +184,14 @@ class _HomeScreenState extends State<HomeScreen> {
         BlocProvider(
           create:
               (context) =>
-                  ProductsCubit(ProductRepository(FirebaseFirestore.instance))
+                  ProductsCubit(ProductRepository())
                     ..getProducts(),
         ),
         BlocProvider(create: (context) => CartCubit()),
         BlocProvider(
-          create:
-              (context) =>
-                  CategoryCubit(CategoryRepository(FirebaseFirestore.instance))
-                    ..getCategory(),
+          create: (context) =>
+              CategoryCubit(getIt<CategoryRepository>())
+                ..getCategory(),
         ),
       ],
       child: Scaffold(
@@ -349,7 +348,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           ),
                                                       child: Image.network(
                                                         products[index]
-                                                            .imageUrl,
+                                                            .thumbnail,
                                                         fit: BoxFit.cover,
                                                       ),
                                                     ),
@@ -410,7 +409,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                               const SizedBox(height: 8),
                                               Text(
-                                                products[index].name,
+                                                products[index].title,
                                                 style: const TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w500,

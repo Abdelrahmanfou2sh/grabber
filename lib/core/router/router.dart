@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:grabber/features/categories/screens/all_products_screen.dart';
+import 'package:grabber/features/categories/screens/all_categories_screen.dart';
 import 'package:grabber/features/checkout/checkout_screen.dart';
 import 'package:grabber/features/product/widgets/screens/cart_screen.dart';
 import 'package:grabber/features/product/widgets/screens/home_screen.dart';

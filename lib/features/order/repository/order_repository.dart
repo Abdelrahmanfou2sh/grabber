@@ -1,26 +1,34 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/order_model.dart';
 
 class OrderRepository {
-  final FirebaseFirestore _firestore;
+  final SharedPreferences _prefs;
 
-  OrderRepository(this._firestore);
-  Future<void> placeOrder({required List<Map<String, dynamic>> products,
+  OrderRepository(this._prefs);
+  Future<void> placeOrder({
+    required List<Map<String, dynamic>> products,
     required double totalPrice,
     required String paymentMethod,
-    required String deliveryOption,}) async {
+    required String deliveryOption,
+  }) async {
     try {
+      final orderId = DateTime.now().millisecondsSinceEpoch.toString();
       final order = OrderModel(
-        id: _firestore.collection('orders').doc().id,
+        id: orderId,
         products: products,
         totalPrice: totalPrice,
         paymentMethod: paymentMethod,
         deliveryOption: deliveryOption,
         createdAt: DateTime.now(),
       );
-      await _firestore.collection('orders').doc(order.id).set(order.toMap());
+      
+      final List<String> existingOrders = _prefs.getStringList('orders') ?? [];
+      existingOrders.add(jsonEncode(order.toMap()));
+      await _prefs.setStringList('orders', existingOrders);
     } catch (e) {
       throw Exception('No Orders : $e');
     }
-  }}
+  }
+}

@@ -34,7 +34,7 @@ class Categories extends StatelessWidget {
                     },
                     child: Column(
                       children: [
-                        Image.network(category.imageUrl, width: 70, height: 70),
+                        Image.network(category.url, width: 70, height: 70),
                         const SizedBox(height: 10),
                         Text(category.name),
                       ],

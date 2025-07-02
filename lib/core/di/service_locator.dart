@@ -1,6 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../features/search/cubit/search_cubit.dart';
 import '../../features/search/repository/search_repository.dart';
 import '../../features/product/cubit/cart_cubit.dart';
@@ -20,37 +19,23 @@ final getIt = GetIt.instance;
 
 bool _isServiceLocatorInitialized = false;
 
-void setupServiceLocator() {
+Future<void> setupServiceLocator() async {
   if (_isServiceLocatorInitialized) return;
   _isServiceLocatorInitialized = true;
 
   // Repositories
-  getIt.registerLazySingleton<SearchRepository>(
-    () => SearchRepository(FirebaseFirestore.instance),
-  );
+  getIt.registerLazySingleton<SearchRepository>(() => SearchRepository());
 
-  getIt.registerLazySingleton<AuthRepository>(
-    () => AuthRepository(
-      auth: FirebaseAuth.instance,
-      firestore: FirebaseFirestore.instance,
-    ),
-  );
+  getIt.registerLazySingleton<AuthRepository>(() => AuthRepository());
 
-  getIt.registerLazySingleton<CategoryRepository>(
-    () => CategoryRepository(FirebaseFirestore.instance),
-  );
+  getIt.registerLazySingleton<CategoryRepository>(() => CategoryRepository());
 
-  getIt.registerLazySingleton<ProductRepository>(
-    () => ProductRepository(FirebaseFirestore.instance),
-  );
+  getIt.registerLazySingleton<ProductRepository>(() => ProductRepository());
 
-  getIt.registerLazySingleton<PaymentRepository>(
-    () => PaymentRepository(firestore: FirebaseFirestore.instance),
-  );
+  final prefs = await SharedPreferences.getInstance();
+  getIt.registerLazySingleton<PaymentRepository>(() => PaymentRepository(prefs));
 
-  getIt.registerLazySingleton<OrderRepository>(
-    () => OrderRepository(FirebaseFirestore.instance),
-  );
+  getIt.registerLazySingleton<OrderRepository>(() => OrderRepository(prefs));
 
   // Cubits
   getIt.registerFactory<SearchCubit>(

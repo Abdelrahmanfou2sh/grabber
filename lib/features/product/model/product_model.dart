@@ -1,40 +1,57 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class Product {
-  final String id;
-  final String name;
+  final int id;
+  final String title;
   final String description;
   final double price;
-  final double? discountPrice;
-  final String imageUrl;
+  final double discountPercentage;
+  final double rating;
+  final int stock;
+  final String brand;
   final String category;
-  final bool inStock;
+  final String thumbnail;
+  final List<String> images;
 
   Product({
     required this.id,
-    required this.name,
+    required this.title,
     required this.description,
     required this.price,
-    this.discountPrice,
-    required this.imageUrl,
+    required this.discountPercentage,
+    required this.rating,
+    required this.stock,
+    required this.brand,
     required this.category,
-    required this.inStock,
+    required this.thumbnail,
+    required this.images,
   });
 
-  factory Product.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+  factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      id: doc.id,
-      name: data['name'] ?? '',
-      description: data['description'] ?? '',
-      price: (data['price'] ?? 0).toDouble(),
-      discountPrice:
-          data['discountPrice'] != null
-              ? data['discountPrice'].toDouble()
-              : null,
-      imageUrl: data['imageUrl'] ?? '',
-      category: data['category'] ?? '',
-      inStock: data['inStock'] ?? true,
+      id: json['id'] as int,
+      title: json['title'] as String,
+      description: json['description'] as String,
+      price: (json['price'] as num).toDouble(),
+      discountPercentage: (json['discountPercentage'] as num).toDouble(),
+      rating: (json['rating'] as num).toDouble(),
+      stock: json['stock'] as int,
+      brand: json['brand'] as String,
+      category: json['category'] as String,
+      thumbnail: json['thumbnail'] as String,
+      images: List<String>.from(json['images'] as List),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'title': title,
+    'description': description,
+    'price': price,
+    'discountPercentage': discountPercentage,
+    'rating': rating,
+    'stock': stock,
+    'brand': brand,
+    'category': category,
+    'thumbnail': thumbnail,
+    'images': images,
+  };
 }

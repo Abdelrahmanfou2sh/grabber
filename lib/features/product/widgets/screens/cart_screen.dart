@@ -27,9 +27,9 @@ class CartScreen extends StatelessWidget {
                         final product = cart[index];
                         return ListTile(
                           leading: CircleAvatar(
-                            backgroundImage: NetworkImage(product.imageUrl),
+                            backgroundImage: NetworkImage(product.thumbnail),
                           ),
-                          title: Text(product.name),
+                          title: Text(product.title),
                           subtitle: Text('\$${product.price}'),
                           trailing: IconButton(
                             icon: const Icon(Icons.delete, color: Colors.red),

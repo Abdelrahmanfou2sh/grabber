@@ -127,14 +127,14 @@ class _SearchScreenState extends State<SearchScreen> {
                       leading: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
-                          product.imageUrl,
+                          product.thumbnail,
                           width: 60,
                           height: 60,
                           fit: BoxFit.cover,
                         ),
                       ),
                       title: Text(
-                        product.name,
+                        product.title,
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
@@ -151,7 +151,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                'تمت إضافة ${product.name} إلى السلة',
+                                'تمت إضافة ${product.title} إلى السلة',
                               ),
                             ),
                           );

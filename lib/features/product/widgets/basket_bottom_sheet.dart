@@ -33,9 +33,9 @@ class BasketBottomSheet extends StatelessWidget {
           ...cart.map(
             (product) => ListTile(
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(product.imageUrl),
+                backgroundImage: NetworkImage(product.thumbnail),
               ),
-              title: Text(product.name),
+              title: Text(product.title),
               subtitle: Text('\$${product.price.toStringAsFixed(2)}'),
               trailing: InkWell(
                 onTap: () => cart.remove(product),

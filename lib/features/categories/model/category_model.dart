@@ -1,18 +1,17 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class CategoryModel {
-  final String id;
+  final String slug;
   final String name;
-  final String imageUrl;
+  final String url;
 
-  CategoryModel({required this.id, required this.name, required this.imageUrl});
+  CategoryModel({required this.slug, required this.name, required this.url});
 
-  factory CategoryModel.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+  factory CategoryModel.fromJson(Map<String, dynamic> json) {
     return CategoryModel(
-      id: doc.id,
-      name: data['name'] ?? '',
-      imageUrl: data['imageUrl'] ?? '',
+      slug: json['slug'] as String,
+      name: json['name'] as String,
+      url: json['url'] as String,
     );
   }
+
+  Map<String, dynamic> toJson() => {'slug': slug, 'name': name, 'url': url};
 }

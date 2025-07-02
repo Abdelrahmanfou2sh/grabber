@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class PaymentModel {
   final String? id;
   final String cardNumber;
@@ -29,7 +27,7 @@ class PaymentModel {
       'cardType': cardType,
       'isSaved': isSaved,
       'userId': userId,
-      'createdAt': createdAt,
+      'createdAt': createdAt.toIso8601String(),
     };
   }
 
@@ -42,7 +40,7 @@ class PaymentModel {
       cardType: map['cardType'] as String,
       isSaved: map['isSaved'] as bool,
       userId: map['userId'] as String,
-      createdAt: (map['createdAt'] as Timestamp).toDate(),
+      createdAt: DateTime.parse(map['createdAt'] as String),
     );
   }
 

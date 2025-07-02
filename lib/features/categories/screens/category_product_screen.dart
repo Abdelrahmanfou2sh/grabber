@@ -31,13 +31,13 @@ class CategoryProductsScreen extends StatelessWidget {
                 final product = filteredProducts[index];
                 return ListTile(
                   leading: Image.network(
-                    product.imageUrl,
+                    product.thumbnail,
                     width: 50,
                     height: 50,
                     fit: BoxFit.cover,
                   ),
-                  title: Text(product.name),
-                  subtitle: Text('\$${product.discountPrice ?? product.price}'),
+                  title: Text(product.title),
+                  subtitle: Text('\$${product.discountPercentage ?? product.price}'),
                   onTap: () {
                     Navigator.push(
                       context,

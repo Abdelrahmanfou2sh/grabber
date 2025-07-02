@@ -1,15 +1,18 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/payment_model.dart';
 
 class PaymentRepository {
-  final FirebaseFirestore _firestore;
+  final SharedPreferences _prefs;
 
-  PaymentRepository({FirebaseFirestore? firestore})
-    : _firestore = firestore ?? FirebaseFirestore.instance;
+  PaymentRepository(this._prefs);
 
   Future<void> saveCard(PaymentModel payment) async {
     try {
-      await _firestore.collection('payments').add(payment.toMap());
+      final cards = await getSavedCards(payment.userId);
+      cards.add(payment);
+      final cardsJson = cards.map((card) => card.toMap()).toList();
+      await _prefs.setString('payments_${payment.userId}', jsonEncode(cardsJson));
     } catch (e) {
       throw Exception('Failed to save card data');
     }
@@ -17,15 +20,13 @@ class PaymentRepository {
 
   Future<List<PaymentModel>> getSavedCards(String userId) async {
     try {
-      final snapshot =
-          await _firestore
-              .collection('payments')
-              .where('userId', isEqualTo: userId)
-              .where('isSaved', isEqualTo: true)
-              .get();
-
-      return snapshot.docs
-          .map((doc) => PaymentModel.fromMap(doc.data(), doc.id))
+      final cardsJson = _prefs.getString('payments_$userId');
+      if (cardsJson == null) return [];
+      
+      final List<dynamic> cardsList = jsonDecode(cardsJson);
+      return cardsList
+          .map((card) => PaymentModel.fromMap(card as Map<String, dynamic>, card['id'] ?? ''))
+          .where((card) => card.isSaved)
           .toList();
     } catch (e) {
       throw Exception('Failed to retrieve saved cards');
@@ -34,7 +35,11 @@ class PaymentRepository {
 
   Future<void> deleteCard(String cardId) async {
     try {
-      await _firestore.collection('payments').doc(cardId).delete();
+      final userId = (await getSavedCards('')).firstWhere((card) => card.id == cardId).userId;
+      final cards = await getSavedCards(userId);
+      cards.removeWhere((card) => card.id == cardId);
+      final cardsJson = cards.map((card) => card.toMap()).toList();
+      await _prefs.setString('payments_$userId', jsonEncode(cardsJson));
     } catch (e) {
       throw Exception('Failed to delete card');
     }

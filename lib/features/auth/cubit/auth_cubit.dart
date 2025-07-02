@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import '../models/user_model.dart';
 import '../repositories/auth_repository.dart';
 
 part 'auth_state.dart';
@@ -12,29 +12,38 @@ class AuthCubit extends Cubit<AuthState> {
     : _repository = repository,
       super(const AuthInitial());
 
-  Future<void> signIn(String email, String password) async {
+  Future<void> signIn(String username, String password) async {
     emit(const AuthLoading());
     try {
-      await _repository.signInWithEmailAndPassword(
-        email: email,
+      final user = await _repository.signInWithEmailAndPassword(
+        username: username,
         password: password,
       );
-      emit(const AuthSuccess('تم تسجيل الدخول بنجاح'));
-      emit(const AuthAuthenticated());
+      emit(AuthSuccess('تم تسجيل الدخول بنجاح'));
+      emit(AuthAuthenticated(user));
     } catch (e) {
       emit(AuthError(e.toString()));
     }
   }
 
-  Future<void> signUp(String email, String password) async {
+  Future<void> signUp({
+    required String email,
+    required String password,
+    required String username,
+    required String firstName,
+    required String lastName,
+  }) async {
     emit(const AuthLoading());
     try {
-      await _repository.signUpWithEmailAndPassword(
+      final user = await _repository.signUpWithEmailAndPassword(
         email: email,
         password: password,
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
       );
-      emit(const AuthSuccess('تم إنشاء الحساب بنجاح'));
-      emit(const AuthAuthenticated());
+      emit(AuthSuccess('تم إنشاء الحساب بنجاح'));
+      emit(AuthAuthenticated(user));
     } catch (e) {
       emit(AuthError(e.toString()));
     }
@@ -50,9 +59,9 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void checkAuthState() {
-    _repository.authStateChanges.listen((User? user) {
+    _repository.authStateChanges.listen((UserModel? user) {
       if (user != null) {
-        emit(const AuthAuthenticated());
+        emit(AuthAuthenticated(user));
       } else {
         emit(const AuthUnauthenticated());
       }

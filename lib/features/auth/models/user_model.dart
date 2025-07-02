@@ -1,52 +1,62 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class UserModel {
-  final String id;
+  final int id;
+  final String username;
   final String email;
-  final String? name;
-  final String? imageUrl;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String firstName;
+  final String lastName;
+  final String? image;
+  final String? token;
 
   UserModel({
     required this.id,
+    required this.username,
     required this.email,
-    this.name,
-    this.imageUrl,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.firstName,
+    required this.lastName,
+    this.image,
+    this.token,
   });
 
-  factory UserModel.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+  factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: doc.id,
-      email: data['email'] ?? '',
-      name: data['name'],
-      imageUrl: data['imageUrl'],
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      id: json['id'],
+      username: json['username'],
+      email: json['email'],
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+      image: json['image'],
+      token: json['token'],
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
+      'id': id,
+      'username': username,
       'email': email,
-      'name': name,
-      'imageUrl': imageUrl,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
+      'firstName': firstName,
+      'lastName': lastName,
+      'image': image,
+      'token': token,
     };
   }
 
-  UserModel copyWith({String? name, String? imageUrl}) {
+  String get fullName => '$firstName $lastName';
+
+  UserModel copyWith({
+    String? username,
+    String? firstName,
+    String? lastName,
+    String? image,
+  }) {
     return UserModel(
       id: id,
+      username: username ?? this.username,
       email: email,
-      name: name ?? this.name,
-      imageUrl: imageUrl ?? this.imageUrl,
-      createdAt: createdAt,
-      updatedAt: DateTime.now(),
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      image: image ?? this.image,
+      token: token,
     );
   }
 }

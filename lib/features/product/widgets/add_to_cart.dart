@@ -33,7 +33,7 @@ class AddToCartBar extends StatelessWidget {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            '${cart[index].name} removed from cart',
+                            '${cart[index].title} removed from cart',
                           ),
                         ),
                       );
@@ -49,7 +49,7 @@ class AddToCartBar extends StatelessWidget {
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Image.network(cart[index].imageUrl),
+                          child: Image.network(cart[index].thumbnail),
                         ),
                       ),
                     ),

@@ -1,61 +1,53 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../models/user_model.dart';
 
 class AuthRepository {
-  final FirebaseAuth _auth;
-  final FirebaseFirestore _firestore;
+  final String baseUrl = 'https://dummyjson.com';
+  UserModel? _currentUser;
 
-  AuthRepository({FirebaseAuth? auth, FirebaseFirestore? firestore})
-    : _auth = auth ?? FirebaseAuth.instance,
-      _firestore = firestore ?? FirebaseFirestore.instance;
+  AuthRepository();
 
-  Stream<User?> get authStateChanges => _auth.authStateChanges();
+  Stream<UserModel?> get authStateChanges => Stream.value(_currentUser);
 
-  Future<UserCredential> signInWithEmailAndPassword({
-    required String email,
+  Future<UserModel> signInWithEmailAndPassword({
+    required String username,
     required String password,
   }) async {
     try {
-      return await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/login'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'username': username, 'password': password}),
       );
+
+      if (response.statusCode == 200) {
+        _currentUser = UserModel.fromJson(jsonDecode(response.body));
+        return _currentUser!;
+      } else {
+        throw Exception('Failed to sign in: ${response.body}');
+      }
     } catch (e) {
       throw Exception('Failed to sign in: ${e.toString()}');
     }
   }
 
-  Future<UserCredential> signUpWithEmailAndPassword({
+  // Note: DummyJSON doesn't support sign up, but we'll keep the method for compatibility
+  Future<UserModel> signUpWithEmailAndPassword({
     required String email,
     required String password,
+    required String username,
+    required String firstName,
+    required String lastName,
   }) async {
-    try {
-      final userCredential = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      // تخزين بيانات المستخدم في Firestore
-      await _firestore.collection('users').doc(userCredential.user!.uid).set({
-        'email': email,
-        'createdAt': FieldValue.serverTimestamp(),
-      });
-
-      return userCredential;
-    } catch (e) {
-      throw Exception('Failed to sign up: ${e.toString()}');
-    }
+    throw UnimplementedError('Sign up is not supported by DummyJSON API');
   }
 
   Future<void> signOut() async {
-    try {
-      await _auth.signOut();
-    } catch (e) {
-      throw Exception('Failed to sign out: ${e.toString()}');
-    }
+    _currentUser = null;
   }
 
-  User? get currentUser => _auth.currentUser;
+  UserModel? get currentUser => _currentUser;
 
-  bool get isAuthenticated => currentUser != null;
+  bool get isAuthenticated => _currentUser != null;
 }

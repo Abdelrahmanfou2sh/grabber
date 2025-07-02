@@ -25,7 +25,12 @@ class AuthSuccess extends AuthState {
 }
 
 class AuthAuthenticated extends AuthState {
-  const AuthAuthenticated();
+  final UserModel user;
+
+  const AuthAuthenticated(this.user);
+
+  @override
+  List<Object?> get props => [user];
 }
 
 class AuthUnauthenticated extends AuthState {
